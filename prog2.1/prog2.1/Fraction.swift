@@ -15,8 +15,8 @@ class Fraction {
     
     //STORED PROPERTIES
     
-    private var num: Int; // Numerator
-    private var den: Int; // Denominator
+    private let num: Int; // Numerator
+    private let den: Int; // Denominator
     
     //COMPUTED PROPERTIES
     
@@ -39,8 +39,33 @@ class Fraction {
         - returns : String String representation of a fraction
      */
     var description: String {
-        return "\(self.num)/\(self.den)"
+        var whole = 0
+        let den = self.den
+        var num = self.num
+        var neg = false
+        
+        if (num < 0){
+            num = -num
+            neg = true
+        }
+        
+        if (den > 1 && den > num){
+            return "\(self.num)/\(self.den)"
+        } else if (den == 1){
+            return "\(self.num)"
+        } else {
+            
+            while (den < num){
+                whole += 1
+                num -= den
+            }
+            if (neg){
+                num = -num
+            }
+            return "\(whole) " + Fraction(num: num, den: self.den).description
+        }
     }
+    
     
     //INITIALISERS
     
@@ -68,10 +93,34 @@ class Fraction {
         //Check the denominator...
         assert(den != 0, "Denominator cannot be zero")
         
+        var num = num
+        var den = den
+        
+        if(den < 0) {
+            // If the denominator is negative
+            // multiply the numerator and
+            // denominator by -1 - this
+            // ensures the denominator is
+            // always positive, and numerator
+            // carries the appropriate sign
+            num = -num
+            den = -den
+        }
+        
+        // Find greatest common denominator
+        for gcd in (1...den).reversed() {
+            if(num%gcd == 0 && den%gcd==0) {
+                // Common denominator found,
+                // divide numerator and denominator
+                num /= gcd
+                den /= gcd
+                break
+            }
+        }
+        
         self.num = num
         self.den = den
-        
-        self.reduce()
+    
     }
     
     /**
@@ -226,33 +275,8 @@ class Fraction {
     func divide(_ x: Int) -> Fraction {
         return Fraction(num: self.num, den: self.den*x)
     }
-    
-    /**
-     Reduce self by greatest common denominator found.
-     */
-    private func reduce() {
-        if(den < 0) {
-            // If the denominator is negative
-            // multiply the numerator and
-            // denominator by -1 - this
-            // ensures the denominator is
-            // always positive, and numerator
-            // carries the appropriate sign
-            num = -num
-            den = -den
-        }
+
         
-        // Find greatest common denominator
-        for gcd in (1...den).reversed() {
-            if(num%gcd == 0 && den%gcd==0) {
-                // Common denominator found,
-                // divide numerator and denominator
-                num /= gcd
-                den /= gcd
-                break
-            }
-        }
-    }
 }
 
 
