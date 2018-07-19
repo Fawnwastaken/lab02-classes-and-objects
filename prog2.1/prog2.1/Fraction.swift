@@ -60,7 +60,7 @@ class Fraction {
                 num -= den
             }
             if (neg){
-                num = -num
+                whole = -whole
             }
             return "\(whole) " + Fraction(num: num, den: self.den).description
         }
